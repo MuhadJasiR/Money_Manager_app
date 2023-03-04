@@ -88,7 +88,7 @@ class HomeScreen extends StatelessWidget {
                     child: Container(
                       alignment: AlignmentDirectional.bottomCenter,
                       width: MediaQuery.of(context).size.width,
-                      child: const FlippingContainer(),
+                      child: FlippingContainer(),
                     ),
                   ),
                 ],

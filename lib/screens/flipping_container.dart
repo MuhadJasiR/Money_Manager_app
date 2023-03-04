@@ -3,28 +3,20 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:money_manager_app/db/transaction_db.dart';
-import 'package:money_manager_app/screens/financial_chart/finalcial_report.dart';
-import 'package:money_manager_app/widgets/total_income_calculation.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class FlippingContainer extends StatefulWidget {
-  const FlippingContainer({super.key});
+class FlippingContainer extends StatelessWidget {
+  FlippingContainer({super.key});
 
-  @override
-  State<FlippingContainer> createState() => _FlippingContainerState();
-}
-
-class _FlippingContainerState extends State<FlippingContainer> {
   late FlipCardController flipCardController;
-  @override
-  void initState() {
-    super.initState();
-    flipCardController = FlipCardController();
-  }
 
   @override
   Widget build(BuildContext context) {
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   flipCardController = FlipCardController();
+    // });
+    flipCardController = FlipCardController();
     Size size = MediaQuery.of(context).size;
     return FlipCard(
         direction: FlipDirection.VERTICAL,

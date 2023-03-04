@@ -7,37 +7,30 @@ import 'package:money_manager_app/screens/introduction_screen.dart';
 import 'package:money_manager_app/widgets/bottom_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    // checkFirstScreen(context);
-    super.initState();
-    Timer(const Duration(seconds: 4), (() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      bool seen = (prefs.getBool("seen") ?? false);
-      if (seen) {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: ((context) {
-          return BottomNavBar(context);
-        })));
-      } else {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: ((context) {
-          return const IntroductionScreen();
-        })));
-      }
-    }));
-  }
-
-  @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        Timer(const Duration(seconds: 4), (() async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          bool seen = (prefs.getBool("seen") ?? false);
+          if (seen) {
+            Navigator.of(context)
+                .pushReplacement(MaterialPageRoute(builder: ((context) {
+              return BottomNavBar(context);
+            })));
+          } else {
+            Navigator.of(context)
+                .pushReplacement(MaterialPageRoute(builder: ((context) {
+              return const IntroductionScreen();
+            })));
+          }
+        }));
+      },
+    );
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
