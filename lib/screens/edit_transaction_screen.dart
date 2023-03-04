@@ -15,7 +15,7 @@ List<Widget> transactionType = <Widget>[
 ];
 
 // ignore: must_be_immutable
-class EditTransactionScreen extends StatefulWidget {
+class EditTransactionScreen extends StatelessWidget {
   EditTransactionScreen({
     super.key,
     required this.obj,
@@ -24,11 +24,6 @@ class EditTransactionScreen extends StatefulWidget {
   String? id;
   TransactionModel obj;
 
-  @override
-  State<EditTransactionScreen> createState() => _EditTransactionScreenState();
-}
-
-class _EditTransactionScreenState extends State<EditTransactionScreen> {
   final _formkey = GlobalKey<FormState>();
   String _selectedDateMessages = '';
   String _selectedCategoryMessages = '';
@@ -40,26 +35,24 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
   List<bool> _selectTranscationType = <bool>[true, false];
   String? _categoryId;
   var selectedType;
-  @override
-  void initState() {
-    CategoryDB.instance.expenseCategoryListListener;
-    CategoryDB.instance.incomeCategoryListListener;
-    super.initState();
-    _amountTextEditingController =
-        TextEditingController(text: widget.obj.amount.toString());
-    _notesTextEditingController = TextEditingController(text: widget.obj.notes);
-    _selectedDate = widget.obj.date;
-    _selectedCategoryType = widget.obj.category.type;
-    _selectedCategoryModel = widget.obj.category;
-    _categoryId = widget.obj.category.id;
-    _selectTranscationType = widget.obj.category.type == CategoryType.income
-        ? [true, false]
-        : [false, true];
-    selectedType = _selectedCategoryType == CategoryType.income ? 0 : 1;
-  }
 
   @override
   Widget build(BuildContext context) {
+    CategoryDB.instance.expenseCategoryListListener;
+    CategoryDB.instance.incomeCategoryListListener;
+
+    _amountTextEditingController =
+        TextEditingController(text: obj.amount.toString());
+    _notesTextEditingController = TextEditingController(text: obj.notes);
+    _selectedDate = obj.date;
+    _selectedCategoryType = obj.category.type;
+    _selectedCategoryModel = obj.category;
+    _categoryId = obj.category.id;
+    _selectTranscationType = obj.category.type == CategoryType.income
+        ? [true, false]
+        : [false, true];
+    selectedType = _selectedCategoryType == CategoryType.income ? 0 : 1;
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -123,10 +116,11 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 70),
-                                  child: ToggleButtons(
-                                    // direction: Axis.horizontal,
-                                    onPressed: (int index) {
-                                      setState(() {
+                                  child: Consumer<TransactionDB>(
+                                    builder: (context, value, child) =>
+                                        ToggleButtons(
+                                      // direction: Axis.horizontal,
+                                      onPressed: (int index) {
                                         for (int i = 0;
                                             i < _selectTranscationType.length;
                                             i++) {
@@ -134,23 +128,24 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                                               i == index;
                                           selectedType = index;
                                           _categoryId = null;
+                                          value.notifyListeners();
                                         }
-                                      });
-                                    },
-                                    color: const Color.fromARGB(
-                                        255, 128, 128, 128),
-                                    borderColor:
-                                        const Color.fromARGB(255, 45, 35, 255),
-                                    borderRadius: BorderRadius.circular(25),
-                                    selectedBorderColor:
-                                        const Color.fromARGB(255, 35, 43, 255),
-                                    selectedColor: Colors.white,
-                                    fillColor:
-                                        const Color.fromARGB(255, 35, 43, 255),
-                                    constraints: const BoxConstraints(
-                                        minHeight: 30, minWidth: 85),
-                                    isSelected: _selectTranscationType,
-                                    children: transactionType,
+                                      },
+                                      color: const Color.fromARGB(
+                                          255, 128, 128, 128),
+                                      borderColor: const Color.fromARGB(
+                                          255, 45, 35, 255),
+                                      borderRadius: BorderRadius.circular(25),
+                                      selectedBorderColor: const Color.fromARGB(
+                                          255, 35, 43, 255),
+                                      selectedColor: Colors.white,
+                                      fillColor: const Color.fromARGB(
+                                          255, 35, 43, 255),
+                                      constraints: const BoxConstraints(
+                                          minHeight: 30, minWidth: 85),
+                                      isSelected: _selectTranscationType,
+                                      children: transactionType,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 8),
@@ -221,13 +216,13 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                                                     onTap: () {
                                                       _selectedCategoryModel =
                                                           e;
+                                                      value.notifyListeners();
                                                     },
                                                   );
                                                 }).toList(),
                                                 onChanged: (selectedValue) {
-                                                  setState(() {
-                                                    _categoryId = selectedValue;
-                                                  });
+                                                  _categoryId = selectedValue;
+                                                  value.notifyListeners();
                                                 },
                                               ),
                                             );
@@ -282,35 +277,36 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                TextFormField(
-                                  readOnly: true,
-                                  onTap: () async {
-                                    final selectedDateTemp =
-                                        await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now()
-                                          .subtract(const Duration(days: 30)),
-                                      lastDate: DateTime.now(),
-                                    );
-                                    if (selectedDateTemp == null) {
-                                      return;
-                                    } else {
-                                      setState(() {
+                                Consumer<TransactionDB>(
+                                  builder: (context, value, child) =>
+                                      TextFormField(
+                                    readOnly: true,
+                                    onTap: () async {
+                                      final selectedDateTemp =
+                                          await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime.now()
+                                            .subtract(const Duration(days: 30)),
+                                        lastDate: DateTime.now(),
+                                      );
+                                      if (selectedDateTemp == null) {
+                                        return;
+                                      } else {
                                         _selectedDate = selectedDateTemp;
-                                      });
-                                    }
-                                  },
-                                  decoration: InputDecoration(
-                                      hintText: (_selectedDate == null
-                                          ? "Select Date"
-                                          : parseDate(_selectedDate!)),
-                                      prefixIcon:
-                                          const Icon(Icons.calendar_month),
-                                      isDense: true,
-                                      fillColor: Colors.white,
-                                      border: const OutlineInputBorder(),
-                                      filled: true),
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                        hintText: (_selectedDate == null
+                                            ? "Select Date"
+                                            : parseDate(_selectedDate!)),
+                                        prefixIcon:
+                                            const Icon(Icons.calendar_month),
+                                        isDense: true,
+                                        fillColor: Colors.white,
+                                        border: const OutlineInputBorder(),
+                                        filled: true),
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 111),
@@ -326,39 +322,41 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
                                 Center(
                                   child: SizedBox(
                                     width: 180,
-                                    child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            shape: MaterialStateProperty.all<
-                                                    RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)))),
-                                        onPressed: () {
-                                          if (_selectedCategoryModel == null) {
-                                            setState(() {
-                                              _selectedCategoryMessages =
-                                                  "Please select Category";
-                                            });
-                                          }
-                                          if (_selectedDate == null) {
-                                            setState(() {
-                                              _selectedDateMessages =
-                                                  "Please select date";
-                                            });
-                                          }
-                                          if (_formkey.currentState!
-                                              .validate()) {
-                                            editTransaction();
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(const SnackBar(
-                                                    duration: Duration(
-                                                        milliseconds: 1200),
-                                                    content: Text(
-                                                        "Transaction edited")));
-                                          }
-                                        },
-                                        child: const Text("Update")),
+                                    child: Consumer<TransactionDB>(
+                                      builder: (context, value, child) =>
+                                          ElevatedButton(
+                                              style: ButtonStyle(
+                                                  shape: MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20)))),
+                                              onPressed: () {
+                                                if (_selectedCategoryModel ==
+                                                    null) {
+                                                  _selectedCategoryMessages =
+                                                      "Please select Category";
+                                                }
+                                                if (_selectedDate == null) {
+                                                  _selectedDateMessages =
+                                                      "Please select date";
+                                                }
+                                                if (_formkey.currentState!
+                                                    .validate()) {
+                                                  editTransaction(context);
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(const SnackBar(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  1200),
+                                                          content: Text(
+                                                              "Transaction edited")));
+                                                }
+                                              },
+                                              child: const Text("Update")),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -377,7 +375,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
     );
   }
 
-  Future<void> editTransaction() async {
+  Future<void> editTransaction(context) async {
     final notesText = _notesTextEditingController.text;
     final amountText = _amountTextEditingController.text;
 
@@ -404,7 +402,7 @@ class _EditTransactionScreenState extends State<EditTransactionScreen> {
       date: _selectedDate!,
       type: _selectedCategoryType!,
       category: _selectedCategoryModel!,
-      id: widget.obj.id,
+      id: obj.id,
     );
 
     await TransactionDB.instance.updateTransactionModel(model);
