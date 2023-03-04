@@ -21,6 +21,14 @@ class TransactionDB with ChangeNotifier {
 
   static TransactionDB instance = TransactionDB._internal();
 
+  final List<bool> selectTranscationType = [true, false];
+
+  var selectedType;
+
+  String? categoryId;
+
+  DateTime? selectedDate;
+
   factory TransactionDB() {
     return instance;
   }

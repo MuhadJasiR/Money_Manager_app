@@ -43,7 +43,7 @@ class _BottomNavigationBarState extends State<BottomNavBar> {
                     case 0:
                       Navigator.push(context,
                           MaterialPageRoute(builder: ((context) {
-                        return const AddTransaction();
+                        return AddTransaction();
                       })));
                       break;
                     case 1:

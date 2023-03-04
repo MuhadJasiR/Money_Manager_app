@@ -16,37 +16,28 @@ List<Widget> transactionType = <Widget>[
 ];
 bool vertical = false;
 
-class AddTransaction extends StatefulWidget {
-  const AddTransaction({super.key});
+class AddTransaction extends StatelessWidget {
+  AddTransaction({super.key});
 
-  @override
-  State<AddTransaction> createState() => _AddTransactionState();
-}
-
-class _AddTransactionState extends State<AddTransaction> {
   final _formkey = GlobalKey<FormState>();
   String _selectedDateMessages = '';
   String _selectedCategoryMessages = '';
-  DateTime? _selectedDate;
+  // DateTime? _selectedDate;
   CategoryType? _selectedCategoryType;
   CategoryModel? _selectedCategoryModel;
   final _notesTextEditingController = TextEditingController();
   final _amountTextEditingController = TextEditingController();
-  late final List<bool> _selectTranscationType;
+  // late final List<bool> _selectTranscationType;
 
-  var selectedType;
-  String? _categoryId;
-
-  @override
-  void initState() {
-    _selectedCategoryType = CategoryType.income;
-    _selectTranscationType = <bool>[true, false];
-
-    super.initState();
-  }
+  // var selectedType;
+  // String? _categoryId;
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _selectedCategoryType = CategoryType.income;
+      Provider.of<TransactionDB>(context, listen: false).selectTranscationType;
+    });
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -109,33 +100,42 @@ class _AddTransactionState extends State<AddTransaction> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                ToggleButtons(
-                                  onPressed: (int index) {
-                                    setState(() {
-                                      for (int i = 0;
-                                          i < _selectTranscationType.length;
-                                          i++) {
-                                        _selectTranscationType[i] = i == index;
-                                        selectedType = index;
-                                        _categoryId = null;
-                                      }
-                                    });
-                                  },
-                                  color:
-                                      const Color.fromARGB(255, 128, 128, 128),
-                                  borderColor:
-                                      const Color.fromARGB(255, 45, 35, 255),
-                                  borderRadius: BorderRadius.circular(25),
-                                  selectedBorderColor:
-                                      const Color.fromARGB(255, 35, 43, 255),
-                                  selectedColor: Colors.white,
-                                  fillColor:
-                                      const Color.fromARGB(255, 35, 43, 255),
-                                  constraints: const BoxConstraints(
-                                      minHeight: 30, minWidth: 85),
-                                  isSelected: _selectTranscationType,
-                                  children: transactionType,
-                                ),
+                                Consumer<TransactionDB>(
+                                    builder: ((context, value, child) =>
+                                        ToggleButtons(
+                                          onPressed: (int index) {
+                                            for (int i = 0;
+                                                i <
+                                                    value.selectTranscationType
+                                                        .length;
+                                                i++) {
+                                              value.selectTranscationType[i] =
+                                                  i == index;
+                                              value.selectedType = index;
+                                              value.categoryId = null;
+                                            }
+                                          },
+                                          color: const Color.fromARGB(
+                                              255, 128, 128, 128),
+                                          borderColor: const Color.fromARGB(
+                                              255, 45, 35, 255),
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          selectedBorderColor:
+                                              const Color.fromARGB(
+                                                  255, 35, 43, 255),
+                                          selectedColor: Colors.white,
+                                          fillColor: const Color.fromARGB(
+                                              255, 35, 43, 255),
+                                          constraints: const BoxConstraints(
+                                              minHeight: 30, minWidth: 85),
+                                          isSelected:
+                                              Provider.of<TransactionDB>(
+                                                      context,
+                                                      listen: false)
+                                                  .selectTranscationType,
+                                          children: transactionType,
+                                        ))),
                                 const SizedBox(height: 5),
                                 const Text(
                                   "Categories",
@@ -155,16 +155,19 @@ class _AddTransactionState extends State<AddTransaction> {
                                               border: Border.all(
                                                   color: Colors.black54),
                                             ),
-                                            child: Consumer<CategoryDB>(builder:
-                                                ((context, value, child) {
+                                            child: Consumer2<CategoryDB,
+                                                    TransactionDB>(
+                                                builder: ((context, value,
+                                                    value2, child) {
                                               return DropdownButtonHideUnderline(
                                                 child: DropdownButtonFormField(
                                                   borderRadius:
                                                       BorderRadius.circular(2),
                                                   hint: const Text(
                                                       " Select Category"),
-                                                  value: _categoryId,
-                                                  items: (selectedType == 1
+                                                  value: value2.categoryId,
+                                                  items: (value2.selectedType ==
+                                                              1
                                                           ? value
                                                               .expenseCategoryListListener
                                                           : value
@@ -181,10 +184,8 @@ class _AddTransactionState extends State<AddTransaction> {
                                                     );
                                                   }).toList(),
                                                   onChanged: (selectedValue) {
-                                                    setState(() {
-                                                      _categoryId =
-                                                          selectedValue;
-                                                    });
+                                                    value2.categoryId =
+                                                        selectedValue;
                                                   },
                                                 ),
                                               );
@@ -266,36 +267,41 @@ class _AddTransactionState extends State<AddTransaction> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                TextFormField(
-                                  readOnly: true,
-                                  onTap: () async {
-                                    final selectedDateTemp =
-                                        await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime.now()
-                                          .subtract(const Duration(days: 30)),
-                                      lastDate: DateTime.now(),
-                                    );
-                                    if (selectedDateTemp == null) {
-                                      return;
-                                    } else {
-                                      setState(() {
-                                        _selectedDate = selectedDateTemp;
-                                      });
-                                    }
-                                  },
-                                  decoration: InputDecoration(
-                                      hintText: (_selectedDate == null
-                                          ? "Select Date"
-                                          : parseDate(_selectedDate!)),
-                                      prefixIcon:
-                                          const Icon(Icons.calendar_month),
-                                      isDense: true,
-                                      fillColor: Colors.white,
-                                      border: const OutlineInputBorder(),
-                                      filled: true),
-                                ),
+                                Consumer<TransactionDB>(
+                                    builder: ((context, value, child) =>
+                                        TextFormField(
+                                          readOnly: true,
+                                          onTap: () async {
+                                            final selectedDateTemp =
+                                                await showDatePicker(
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime.now()
+                                                  .subtract(
+                                                      const Duration(days: 30)),
+                                              lastDate: DateTime.now(),
+                                            );
+                                            if (selectedDateTemp == null) {
+                                              return;
+                                            } else {
+                                              value.selectedDate =
+                                                  selectedDateTemp;
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                              hintText:
+                                                  (value.selectedDate == null
+                                                      ? "Select Date"
+                                                      : parseDate(
+                                                          value.selectedDate!)),
+                                              prefixIcon: const Icon(
+                                                  Icons.calendar_month),
+                                              isDense: true,
+                                              fillColor: Colors.white,
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              filled: true),
+                                        ))),
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       left: 10, top: 9, bottom: 3),
@@ -308,39 +314,42 @@ class _AddTransactionState extends State<AddTransaction> {
                                 Center(
                                   child: SizedBox(
                                     width: 180,
-                                    child: ElevatedButton(
-                                        style: ButtonStyle(
-                                            shape: MaterialStateProperty.all<
-                                                    RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)))),
-                                        onPressed: () {
-                                          if (_selectedCategoryModel == null) {
-                                            setState(() {
-                                              _selectedCategoryMessages =
-                                                  "Please select Category";
-                                            });
-                                          }
-                                          if (_selectedDate == null) {
-                                            setState(() {
-                                              _selectedDateMessages =
-                                                  "Please select date";
-                                            });
-                                          }
-                                          if (_formkey.currentState!
-                                              .validate()) {
-                                            addTransaction();
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(const SnackBar(
-                                                    duration: Duration(
-                                                        milliseconds: 1000),
-                                                    content: Text(
-                                                        "Transaction added")));
-                                          }
-                                        },
-                                        child: const Text("Add")),
+                                    child: Consumer<TransactionDB>(
+                                      builder: (context, value, child) =>
+                                          ElevatedButton(
+                                              style: ButtonStyle(
+                                                  shape: MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      20)))),
+                                              onPressed: () {
+                                                if (_selectedCategoryModel ==
+                                                    null) {
+                                                  _selectedCategoryMessages =
+                                                      "Please select Category";
+                                                }
+                                                if (value.selectedDate ==
+                                                    null) {
+                                                  _selectedDateMessages =
+                                                      "Please select date";
+                                                }
+                                                if (_formkey.currentState!
+                                                    .validate()) {
+                                                  addTransaction(context);
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(const SnackBar(
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  1000),
+                                                          content: Text(
+                                                              "Transaction added")));
+                                                }
+                                              },
+                                              child: const Text("Add")),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(
@@ -371,7 +380,7 @@ class _AddTransactionState extends State<AddTransaction> {
     );
   }
 
-  Future<void> addTransaction() async {
+  Future<void> addTransaction(context) async {
     final notesText = _notesTextEditingController.text;
     final amountText = _amountTextEditingController.text;
 
@@ -381,7 +390,8 @@ class _AddTransactionState extends State<AddTransaction> {
     if (amountText.isEmpty) {
       return;
     }
-    if (_selectedDate == null) {
+    if (Provider.of<TransactionDB>(context, listen: false).selectedDate ==
+        null) {
       return;
     }
     final parseAmount = double.tryParse(amountText);
@@ -395,7 +405,7 @@ class _AddTransactionState extends State<AddTransaction> {
     final model = TransactionModel(
       notes: notesText,
       amount: parseAmount,
-      date: _selectedDate!,
+      date: Provider.of<TransactionDB>(context, listen: false).selectedDate!,
       type: _selectedCategoryType!,
       category: _selectedCategoryModel!,
       id: DateTime.now().microsecondsSinceEpoch.toString(),
