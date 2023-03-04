@@ -27,17 +27,16 @@ class AddTransaction extends StatelessWidget {
   CategoryModel? _selectedCategoryModel;
   final _notesTextEditingController = TextEditingController();
   final _amountTextEditingController = TextEditingController();
-  // late final List<bool> _selectTranscationType;
+  // late final List<bool> selectTranscationType = [true, false];
 
   // var selectedType;
   // String? _categoryId;
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _selectedCategoryType = CategoryType.income;
-      Provider.of<TransactionDB>(context, listen: false).selectTranscationType;
-    });
+    _selectedCategoryType = CategoryType.income;
+    Provider.of<TransactionDB>(context, listen: false).selectTranscationType;
+
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -113,6 +112,7 @@ class AddTransaction extends StatelessWidget {
                                                   i == index;
                                               value.selectedType = index;
                                               value.categoryId = null;
+                                              value.notifyListeners();
                                             }
                                           },
                                           color: const Color.fromARGB(

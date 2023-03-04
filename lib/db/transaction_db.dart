@@ -3,7 +3,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_manager_app/models/transacrtion_model.dart';
-import 'package:money_manager_app/widgets/total_income_calculation.dart';
 
 import '../models/category_modal.dart';
 
@@ -21,7 +20,7 @@ class TransactionDB with ChangeNotifier {
 
   static TransactionDB instance = TransactionDB._internal();
 
-  final List<bool> selectTranscationType = [true, false];
+  late List<bool> selectTranscationType = [true, false];
 
   var selectedType;
 
