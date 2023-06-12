@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:money_manager_app/db/transaction_db.dart';
+import 'package:money_manager_app/controller/transaction_db.dart';
 import 'package:money_manager_app/models/category_modal.dart';
 import 'package:provider/provider.dart';
 

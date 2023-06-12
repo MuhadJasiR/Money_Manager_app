@@ -1,7 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers, invalid_use_of_visible_for_testing_member
 
 import 'package:flutter/material.dart';
-import 'package:money_manager_app/db/category_db.dart';
+import 'package:money_manager_app/controller/category_db.dart';
 import 'package:money_manager_app/models/category_modal.dart';
 
 ValueNotifier<CategoryType> selectedCategoryNotifier =

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:money_manager_app/db/category_db.dart';
-import 'package:money_manager_app/db/transaction_db.dart';
+import 'package:money_manager_app/controller/category_db.dart';
+import 'package:money_manager_app/controller/transaction_db.dart';
 import 'package:money_manager_app/models/transacrtion_model.dart';
 import 'package:money_manager_app/models/category_modal.dart';
-import 'package:money_manager_app/screens/splash_screen.dart';
+import 'package:money_manager_app/view/intro_page/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {

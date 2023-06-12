@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:money_manager_app/models/transacrtion_model.dart';
-import 'package:money_manager_app/db/transaction_db.dart';
+import 'package:money_manager_app/controller/transaction_db.dart';
 import 'package:money_manager_app/models/category_modal.dart';
 
 // ValueNotifier totalAmount = ValueNotifier(0.0);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:money_manager_app/screens/add_screen.dart';
-import 'package:money_manager_app/screens/category/categories.dart';
-import 'package:money_manager_app/screens/financial_chart/finalcial_report.dart';
-import 'package:money_manager_app/screens/home/home_screen.dart';
-import 'package:money_manager_app/screens/settings/settings.dart';
+import 'package:money_manager_app/view/home/add_screen.dart';
+import 'package:money_manager_app/view/category/categories.dart';
+import 'package:money_manager_app/view/financial_chart/finalcial_report.dart';
+import 'package:money_manager_app/view/home/home_screen.dart';
+import 'package:money_manager_app/view/settings/settings.dart';
 import 'package:money_manager_app/widgets/category_add_popup.dart';
 
 class BottomNavBar extends StatefulWidget {
