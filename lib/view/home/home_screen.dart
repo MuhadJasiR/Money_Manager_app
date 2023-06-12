@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:money_manager_app/controller/category_db.dart';
@@ -8,6 +9,7 @@ import 'package:money_manager_app/view/home/edit_transaction_screen.dart';
 import 'package:money_manager_app/view/home/flipping_container.dart';
 import 'package:money_manager_app/view/home/view_all.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
@@ -141,105 +143,138 @@ class HomeScreen extends StatelessWidget {
                               final value =
                                   newList.transactionListNotifier[index];
                               if (value.id != null) {
-                                return Slidable(
-                                  key: Key(value.id!),
-                                  startActionPane: ActionPane(
-                                      motion: const BehindMotion(),
-                                      children: [
-                                        SlidableAction(
-                                          onPressed: (context) {
-                                            showDialog(
-                                                context: context,
-                                                builder: ((context) {
-                                                  return AlertDialog(
-                                                    content: const Text(
-                                                        "DO you want to delete"),
-                                                    actions: [
-                                                      TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child:
-                                                              const Text("No")),
-                                                      TextButton(
-                                                          onPressed: () {
-                                                            TransactionDB
-                                                                .instance
-                                                                .deleteTransaction(
-                                                                    value);
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child: const Text(
-                                                              "Yes")),
-                                                    ],
-                                                  );
-                                                }));
-                                          },
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 239, 247, 255),
-                                          foregroundColor: Colors.red,
-                                          icon: Icons.delete_outlined,
-                                          label: "Delete",
-                                        )
-                                      ]),
-                                  endActionPane: ActionPane(
-                                      motion: const BehindMotion(),
-                                      children: [
-                                        SlidableAction(
-                                          onPressed: (ctx) {
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
+                                return Column(
+                                  children: [
+                                    Slidable(
+                                      key: Key(value.id!),
+                                      startActionPane: ActionPane(
+                                          motion: const BehindMotion(),
+                                          children: [
+                                            SlidableAction(
+                                              onPressed: (context) {
+                                                showDialog(
+                                                    context: context,
                                                     builder: ((context) {
-                                              return EditTransactionScreen(
-                                                obj: value,
-                                                id: value.id,
-                                              );
-                                            })));
-                                          },
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 239, 247, 255),
-                                          foregroundColor: Colors.blue,
-                                          icon: Icons.edit,
-                                        )
-                                      ]),
-                                  child: Column(
-                                    children: [
-                                      Card(
-                                        child: ListTile(
-                                          leading: value.category.type ==
-                                                  CategoryType.income
-                                              ? const Icon(
-                                                  Icons.arrow_upward,
-                                                  color: Colors.blue,
-                                                  size: 30,
-                                                )
-                                              : const Icon(
-                                                  Icons.arrow_downward,
-                                                  color: Color.fromARGB(
-                                                      255, 255, 0, 55),
-                                                  size: 30,
-                                                ),
-                                          title: Text(
-                                            value.category.name,
-                                            style:
-                                                const TextStyle(fontSize: 20),
+                                                      return AlertDialog(
+                                                        content: const Text(
+                                                            "DO you want to delete"),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: const Text(
+                                                                  "No")),
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                TransactionDB
+                                                                    .instance
+                                                                    .deleteTransaction(
+                                                                        value);
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: const Text(
+                                                                  "Yes")),
+                                                        ],
+                                                      );
+                                                    }));
+                                              },
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 239, 247, 255),
+                                              foregroundColor: Colors.red,
+                                              icon: Icons.delete_outlined,
+                                              label: "Delete",
+                                            )
+                                          ]),
+                                      endActionPane: ActionPane(
+                                          motion: const BehindMotion(),
+                                          children: [
+                                            SlidableAction(
+                                              onPressed: (ctx) {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: ((context) {
+                                                  return EditTransactionScreen(
+                                                    obj: value,
+                                                    id: value.id,
+                                                  );
+                                                })));
+                                              },
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 239, 247, 255),
+                                              foregroundColor: Colors.blue,
+                                              icon: Icons.edit,
+                                            )
+                                          ]),
+                                      child: Column(
+                                        children: [
+                                          Card(
+                                            child: ListTile(
+                                              leading: value.category.type ==
+                                                      CategoryType.income
+                                                  ? const Icon(
+                                                      Icons.arrow_upward,
+                                                      color: Colors.blue,
+                                                      size: 30,
+                                                    )
+                                                  : const Icon(
+                                                      Icons.arrow_downward,
+                                                      color: Color.fromARGB(
+                                                          255, 255, 0, 55),
+                                                      size: 30,
+                                                    ),
+                                              title: Text(
+                                                value.category.name,
+                                                style: const TextStyle(
+                                                    fontSize: 20),
+                                              ),
+                                              subtitle:
+                                                  Text(parseDate(value.date)),
+                                              trailing: Text(
+                                                " ${value.amount}",
+                                                style: const TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black45,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
                                           ),
-                                          subtitle: Text(parseDate(value.date)),
-                                          trailing: Text(
-                                            " ${value.amount}",
-                                            style: const TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.black45,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    newList.transactionListNotifier.length == 1
+                                        ? Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 10),
+                                            child: SizedBox(
+                                              width: 150.0.w,
+                                              height: 50.0.h,
+                                              child: Shimmer.fromColors(
+                                                baseColor: const Color.fromARGB(
+                                                    255, 87, 87, 87),
+                                                highlightColor:
+                                                    const Color.fromARGB(
+                                                        255, 207, 207, 207),
+                                                child: const Text(
+                                                  'Swipe to < Update/Delete >',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        : const SizedBox()
+                                  ],
                                 );
                               } else {
                                 // ignore: prefer_const_constructors

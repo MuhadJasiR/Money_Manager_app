@@ -37,10 +37,10 @@ Future<void> showCategoryAddPopup(BuildContext context,
             ),
             categoryType != null
                 ? const SizedBox()
-                : Padding(
-                    padding: const EdgeInsets.all(10.0),
+                : const Padding(
+                    padding: EdgeInsets.all(10.0),
                     child: Row(
-                      children: const [
+                      children: [
                         RadioButton(title: "income", type: CategoryType.income),
                         RadioButton(
                             title: "Expense", type: CategoryType.expense),
