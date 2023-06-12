@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:money_manager_app/screens/add_screen.dart';
 import 'package:money_manager_app/screens/category/categories.dart';

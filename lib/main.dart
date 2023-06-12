@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_manager_app/db/category_db.dart';
 import 'package:money_manager_app/db/transaction_db.dart';
@@ -53,16 +54,21 @@ class MyApp extends StatelessWidget {
         ListenableProvider(create: ((context) => CategoryDB())),
         ListenableProvider(create: ((context) => TransactionDB()))
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          // useMaterial3: true,
-          primarySwatch:
-              createMaterialColor(const Color.fromARGB(255, 35, 43, 255)),
+      child: ScreenUtilInit(
+        designSize: const Size(360, 690),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) => MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            // useMaterial3: true,
+            primarySwatch:
+                createMaterialColor(const Color.fromARGB(255, 35, 43, 255)),
+          ),
+          // ignore: prefer_const_constructors
+          home: SplashScreen(),
+          debugShowCheckedModeBanner: false,
         ),
-        // ignore: prefer_const_constructors
-        home: SplashScreen(),
-        debugShowCheckedModeBanner: false,
       ),
     );
   }

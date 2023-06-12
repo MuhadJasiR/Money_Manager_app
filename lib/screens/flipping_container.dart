@@ -1,6 +1,7 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:money_manager_app/db/transaction_db.dart';
 import 'package:provider/provider.dart';
@@ -106,7 +107,7 @@ class FlippingContainer extends StatelessWidget {
                     height: 15,
                   ),
                   const Text(
-                    "Tap to rotate",
+                    "Tap icon to rotate",
                     style: TextStyle(fontSize: 10, color: Colors.white),
                   )
                 ],

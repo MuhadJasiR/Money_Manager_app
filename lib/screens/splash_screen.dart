@@ -14,7 +14,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
-        Timer(const Duration(seconds: 4), (() async {
+        Timer(const Duration(seconds: 4), (() async { 
           SharedPreferences prefs = await SharedPreferences.getInstance();
           bool seen = (prefs.getBool("seen") ?? false);
           if (seen) {

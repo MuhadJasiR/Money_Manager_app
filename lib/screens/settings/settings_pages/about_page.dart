@@ -10,18 +10,18 @@ class AboutScreen extends StatelessWidget {
         centerTitle: true,
         title: const Text("About "),
       ),
-      body: Center(
+      body: const Center(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(10.0),
           child: SizedBox(
               height: 220,
               width: 300,
               child: Card(
                 elevation: 10,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Column(
-                    children: const [
+                    children: [
                       Text(
                         "Money manager",
                         style: TextStyle(

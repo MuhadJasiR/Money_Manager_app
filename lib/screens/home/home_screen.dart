@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
@@ -97,9 +96,7 @@ class HomeScreen extends StatelessWidget {
             Column(
               children: [
                 Padding(
-                  padding: kIsWeb
-                      ? const EdgeInsets.only(right: 70, top: 130, left: 70)
-                      : const EdgeInsets.only(right: 25, top: 130, left: 25),
+                  padding: const EdgeInsets.only(right: 25, top: 130, left: 25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -131,9 +128,7 @@ class HomeScreen extends StatelessWidget {
             // Transaction list,
             Expanded(
               child: Padding(
-                  padding: kIsWeb
-                      ? const EdgeInsets.only(top: 15, left: 90, right: 90)
-                      : const EdgeInsets.only(top: 15, left: 15, right: 15),
+                  padding: const EdgeInsets.only(top: 15, left: 15, right: 15),
                   child: Consumer<TransactionDB>(
                       builder: ((context, newList, child) {
                     return newList.transactionListNotifier.isNotEmpty
@@ -247,6 +242,7 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                 );
                               } else {
+                                // ignore: prefer_const_constructors
                                 return Column(
                                   children: const [Text("Value id null")],
                                 );

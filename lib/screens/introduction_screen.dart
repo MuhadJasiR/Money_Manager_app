@@ -46,7 +46,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       prefs.setBool("seen", true);
-                      Navigator.pushAndRemoveUntil(
+                      Navigator.pushAndRemoveUntil( 
                           context,
                           MaterialPageRoute(
                               builder: ((context) => BottomNavBar(context))),

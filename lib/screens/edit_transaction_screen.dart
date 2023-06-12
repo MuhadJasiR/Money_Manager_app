@@ -15,7 +15,7 @@ List<Widget> transactionType = <Widget>[
 ];
 
 // ignore: must_be_immutable
-class EditTransactionScreen extends StatelessWidget {
+class EditTransactionScreen extends StatefulWidget {
   EditTransactionScreen({
     super.key,
     required this.obj,
@@ -24,34 +24,52 @@ class EditTransactionScreen extends StatelessWidget {
   String? id;
   TransactionModel obj;
 
+  @override
+  State<EditTransactionScreen> createState() => _EditTransactionScreenState();
+}
+
+class _EditTransactionScreenState extends State<EditTransactionScreen> {
   final _formkey = GlobalKey<FormState>();
+
   String _selectedDateMessages = '';
+
   String _selectedCategoryMessages = '';
+
   DateTime? _selectedDate;
+
   CategoryType? _selectedCategoryType;
+
   CategoryModel? _selectedCategoryModel;
+
   TextEditingController _notesTextEditingController = TextEditingController();
+
   TextEditingController _amountTextEditingController = TextEditingController();
+
   List<bool> _selectTranscationType = <bool>[true, false];
+
   String? _categoryId;
+
   var selectedType;
+  @override
+  void initState() {
+    _amountTextEditingController =
+        TextEditingController(text: widget.obj.amount.toString());
+    _notesTextEditingController = TextEditingController(text: widget.obj.notes);
+    _selectedDate = widget.obj.date;
+    _selectedCategoryType = widget.obj.category.type;
+    _selectedCategoryModel = widget.obj.category;
+    _categoryId = widget.obj.category.id;
+    _selectTranscationType = widget.obj.category.type == CategoryType.income
+        ? [true, false]
+        : [false, true];
+    selectedType = _selectedCategoryType == CategoryType.income ? 0 : 1;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     CategoryDB.instance.expenseCategoryListListener;
     CategoryDB.instance.incomeCategoryListListener;
-
-    _amountTextEditingController =
-        TextEditingController(text: obj.amount.toString());
-    _notesTextEditingController = TextEditingController(text: obj.notes);
-    _selectedDate = obj.date;
-    _selectedCategoryType = obj.category.type;
-    _selectedCategoryModel = obj.category;
-    _categoryId = obj.category.id;
-    _selectTranscationType = obj.category.type == CategoryType.income
-        ? [true, false]
-        : [false, true];
-    selectedType = _selectedCategoryType == CategoryType.income ? 0 : 1;
 
     return SafeArea(
       child: Scaffold(
@@ -67,9 +85,9 @@ class EditTransactionScreen extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(60),
                       bottomRight: Radius.circular(60))),
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Padding(
                     padding: EdgeInsets.only(bottom: 50),
                     child: Text(
@@ -402,7 +420,7 @@ class EditTransactionScreen extends StatelessWidget {
       date: _selectedDate!,
       type: _selectedCategoryType!,
       category: _selectedCategoryModel!,
-      id: obj.id,
+      id: widget.obj.id,
     );
 
     await TransactionDB.instance.updateTransactionModel(model);
